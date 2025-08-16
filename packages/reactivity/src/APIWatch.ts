@@ -1,0 +1,67 @@
+import { isObject, isFunction } from "@vue/shared";
+import { ReactiveEffect, isReactive, isRef } from "@vue/reactivity";
+
+export function watch(source, cb, options = {} as any) {  
+  return doWatch(source, cb, options);
+}
+
+export function watchEffect(getter, options = {}) {
+  return doWatch(getter, null, options as any);
+}
+
+function traverse(source, depth, currentDepth = 0, seen = new Set()) {
+  if(!isObject(source)) {
+    return source;
+  }
+  if(depth) {
+    if(currentDepth >= depth) {
+      return source;
+    }
+    currentDepth++;
+  }
+  if(seen.has(source)) {
+    return source;
+  }
+  for(let key in source) {
+    traverse(source[key], depth, currentDepth, seen);
+    // seen没做缓存处理，不知道是不是漏掉了，记得看下源码。
+  }
+  return source;
+}
+
+function doWatch(source, cb, { deep, immediate }) {
+  const reactiveGetter = (source) => traverse(source, deep === false ? 1 : undefined);
+  let getter = () => {};
+  if(isReactive(source)) {
+    getter = () => reactiveGetter(source);
+  } else if (isRef(source)) {
+    getter = () => source.value;
+  } else if (isFunction(source)) {
+    getter = source;
+  }
+  let oldValue;
+
+  const job = () => {
+    if(cb) {
+      const newValue = effect.run();
+      cb(newValue, oldValue);
+      oldValue = newValue;    
+    } else {
+      effect.run();
+    }
+  }
+
+  const effect = new ReactiveEffect(getter, job);
+
+  if(cb) {
+    if(immediate) {
+      job();
+    } 
+    else {
+      oldValue = effect.run();
+    }
+    // oldValue = effect.run(); 有疑问，为什么要用else，不是必执行的吗？
+  } else {
+    effect.run();
+  }
+}

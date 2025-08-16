@@ -1,0 +1,24 @@
+{
+  "name": "Vue",
+  "private": "true",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "Hello,this is the first time to run.",
+    "dev": "node scripts/dev.js reactivity -f esm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "esbuild": "^0.25.8",
+    "minimist": "^1.2.8",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "vue": "^3.5.17"
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <div id="app"></div>
+</body>
+<script type="module">
+//   import { 
+//     reactive, 
+//     effect,  
+// } from "/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js"
+  import { reactive, effect, computed } from "./reactivity.js";
+
+  const state = reactive({ name: 'lsb' });
+
+  const aliasName = computed({
+    get(oldValue) {
+      console.log("runner", oldValue);
+      return "**" + state.name;
+    },
+    set(v) {
+      console.log(v);
+    },
+  })
+
+  effect(() => {
+    console.log(aliasName.value);
+    console.log(aliasName.value);
+    console.log(aliasName.value);
+  }); 
+
+  setTimeout(() => {
+    state.name = "lll"
+  }, 3000)
+
+
+</script>
+</html>

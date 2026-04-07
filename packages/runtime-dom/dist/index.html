@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+  import { 
+    renderOptions, 
+    createRenderer, 
+    render, 
+    h, 
+    Fragment, 
+    Text, 
+    ref, 
+    provide, 
+    inject,
+    onBeforeMount,
+    onMounted,
+    onBeforeUpdate,
+    onUpdated,
+    getCurrentInstance,
+    Teleport,
+    Transition,
+    keepAlive,
+    defineAsyncComponent
+  } from "./runtime-dom.js";
+
+  // const A1 = {
+  //   a: 'a1',
+  //   setup() {
+  //     onMounted(() => {
+  //       console.log('a1 mounted');
+  //     })
+  //     return () => {
+  //       return h("h1", "a1");
+  //     }
+  //   }
+  // }
+
+  // const A2 = {
+  //   a: 'a2',
+  //   setup() {
+  //     onMounted(() => {
+  //       console.log('a2 mounted');
+  //     })
+  //     return () => {
+  //       return h("h1", "a2");
+  //     }
+  //   }
+  // }
+
+  // const A3 = {
+  //   a: 'a3',
+  //   setup() {
+  //     onMounted(() => {
+  //       console.log('a3 mounted');
+  //     })
+  //     return () => {
+  //       return h("h1", "a3");
+  //     }
+  //   }
+  // }
+
+  // render(h(keepAlive, { max: 1 }, {
+  //   default: () => h(A1, { key: 'A1' }),
+  // }), app);
+
+  // setTimeout(() => {
+  //   render(h(keepAlive, { max: 1 }, {
+  //     default: () => h(A2, { key: 'A2' }),
+  //   }), app);
+  // }, 1000);
+
+  // setTimeout(() => {
+  //   render(h(keepAlive, { max: 1 }, {
+  //     default: () => h(A1, { key: 'A1' }),
+  //   }), app);
+  // }, 2000);
+
+  // setTimeout(() => {
+  //   render(h(keepAlive, { max: 1 }, {
+  //     default: () => h(A3, { key: 'A3' }),
+  //   }), app);
+  // }, 3000);
+
+  // setTimeout(() => {
+  //   render(h(keepAlive, { max: 1 }, {
+  //     default: () => h(A2, { key: 'A2' }),
+  //   }), app);
+  // }, 4000);
+
+  // const comp = import("./asyncComponent.js");
+  // const index = 2;
+  // let i = 0;
+
+  // const MyComponent = defineAsyncComponent({
+  //   loader: () => {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       if(i++ == 2) {
+  //         resolve({
+  //           render: () => {
+  //             return h("div", "hello");
+  //           }
+  //       })
+  //       } else {
+  //         reject({
+  //           render: () => {
+  //             return h("div", "hello");
+  //           }
+  //         })
+  //       }
+  //     }, 3000)
+  //   });
+  //   },
+  //   timeout: 1000,
+  //   errorComponent: {
+  //     render: () => {
+  //       return h("div", "error");
+  //     }
+  //   },
+  //   delay: 500,
+  //   loadingComponent: {
+  //     render: () => {
+  //       return h("div", "loding");
+  //     }
+  //   },
+  //   onError(err, retry, fail, i) {
+  //     console.log(err, retry, fail, i);
+  //     setTimeout(() => {
+  //       retry();
+  //       console.log("重新加载");
+  //     }, 1000)
+  //   }
+  // })
+
+  // render(h(MyComponent), app);
+
+ 
+  
+
+  </script>
+</body>
+</html>

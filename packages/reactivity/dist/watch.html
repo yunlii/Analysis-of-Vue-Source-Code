@@ -6,32 +6,61 @@
   <title>Document</title>
 </head>
 <body>
-  
+  <div id="app"></div>
 </body>
 <script type="module">
-    import { reactive, effect, computed, watch, watchEffect } from "./reactivity.js";
+  import { reactive, effect, computed, watch, watchEffect, ref } from "./reactivity.js";
 
-    const state = reactive({ name: 'jw', age: 30, address: { n: 1 }});
-    
-
-    // watch(
-    //   state,  // () => state.name;
-    //   function (oldValue, newValue) {
-    //     console.log(oldValue, newValue);
-    //   },
-    //   {
-    //     deep: true,
-    //   }
-    // );
+  // const state = reactive({ name: 'jw', age: 30, address: { n: 1 }});
+  // const unwatch = watch(
+  //   state,  // () => state.name;
+  //   function (oldValue, newValue) {
+  //     console.log(oldValue, newValue);
+  //   },
+  //   {
+  //     deep: true,
+  //   }
+  // );
  
-  watchEffect(
-    function() {
-      console.log(state.name + state.age + state.address.n);
+  // watchEffect(
+  //   function() {
+  //     console.log(state.name + state.age + state.address.n);
+  //   }
+  // )
+
+  // setTimeout(() => {
+  //   state.address.n = "hansome jw";
+  // }, 3000)
+
+  const val = ref("");
+  function getData(timer) {
+    return new Promise((resolve, reject) => {
+      setTimeout(
+        () => {
+          resolve(timer);
+        }, timer);
+    });
+  }
+
+  var timer = 3000;
+  watch(
+    val,
+    async (newValue, oldValue, onCleanup) => {
+      let flag = true;
+      timer -= 1000;
+      onCleanup(() => {
+        flag = false;
+      });
+      let r = await getData(timer);
+      if(flag) {
+        app.innerHTML = r;
+      }
     }
   )
 
   setTimeout(() => {
-    state.address.n = "hansome jw";
-  }, 3000)
+    val.value = "a";
+    val.value = "b";
+  }, 1000);
 </script>
 </html>

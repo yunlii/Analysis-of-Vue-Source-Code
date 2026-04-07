@@ -57,8 +57,15 @@ export class ReactiveEffect {
       return this.fn();
     } finally {
       this._running--;
-      postCleanEffect(this)
+      postCleanEffect(this);
       activeEffect = lastEffect;
+    }
+  }
+  stop() {
+    if(this.active) {
+      this.active = false;
+      preCleanEffect(this);
+      postCleanEffect(this);
     }
   }
 }

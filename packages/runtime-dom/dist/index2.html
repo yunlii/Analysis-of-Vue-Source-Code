@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+    // let ele1 = h(
+  //   "h1",
+  //   [
+  //     h('div', {key: 'a'}, 'a'),
+  //     h('div', {key: 'b'}, 'b'),
+  //     h('div', {key: 'c'}, 'c'),
+  //     h('div', {key: 'd'}, 'd'),
+  //     h('div', {key: 'e', style: {color: 'red'}}, 'e'),
+  //     h('div', {key: 'q'}, 'q'),
+  //     h('div', {key: 'f'}, 'f'),
+  //     h('div', {key: 'g'}, 'g')
+  //   ]
+  // )
+  // let ele2 = h("h1",
+  //   [
+  //     // h('div', {key: 'd', style: { color: "red" }}, 'a'), 
+  //     h('div', {key: 'a'}, 'a'),
+  //     h('div', {key: 'b'}, 'b'),
+  //     h('div', {key: 'e', style: {color: 'green'}}, 'e'),
+  //     h('div', {key: 'c'}, 'c'),
+  //     h('div', {key: 'd'}, 'd'),
+  //     h('div', {key: 'h'}, 'h'),
+  //     h('div', {key: 'f'}, 'f'),
+  //     h('div', {key: 'g'}, 'g')
+  //   ]);
+  
+  // render(ele1, app);
+
+  // render(h(Fragment, [h("div", "hello"), h("a", "word")]), app);
+
+
+  setTimeout(() => {
+    // render(ele2, app);
+    // render(h(Fragment, [h("div", "hello"), h("a", "hello")]), app);
+  }, 3000);
+
+
+  // const VueComponent = {
+  //   props: {
+  //     name: String,
+  //     age: Number
+  //   },
+  //   data() {
+  //     return { x: "jw", y: 30 };
+  //   },
+  //   render(proxy) {
+  //     return h("div", [
+  //       h(Text, "my name is " + proxy.name + "   "),
+  //       h("a", "my age is " + proxy.age)
+  //     ])
+  //   }
+  // }
+  // render(h(VueComponent, { a:1, b:2, name:"jwa", age: 32}), app);
+
+  // const RenderComponent = {
+  //   props: {
+  //     address: String,
+  //   },
+  //   render() {
+  //     return h(Text, this.address)
+  //   }
+  // }
+
+  // const VueComponent = {
+  //   data() {
+  //     return { flag: true };
+  //   },
+  //   render() {
+  //     return h(Fragment, [
+  //       h("button", { onClick: () => { this.flag = !this.flag }}, "点我啊"),
+  //       h(RenderComponent, { address: this.flag ? "北京": "上海" })
+  //     ])
+  //   }
+  // }
+
+  // const VueComponent = {
+  //   setup(props, { emit, attrs, expose, slots }) {
+  //     const a = ref(1);
+  //     setTimeout(() => {
+  //       a.value = 2;
+  //     }, 1000) 
+  //     return {
+  //       a: a
+  //     }
+  //   },
+  //   render(proxy) {
+  //     return h("div", proxy.a);
+  //   }
+  // }
+
+  // const RenderComponent = {
+  //   render(proxy) {
+  //     return h(Fragment, [
+  //       proxy.$slots.footer("fff"),
+  //       proxy.$slots.header("hhh")
+  //     ])
+  //   }
+  // }
+
+  // const VueComponent = {
+  //   setup(props, { emit, attrs, expose, slots }) {
+  //     return (proxy) => {
+  //       return h(RenderComponent, null, {
+  //         header: (t) => h("header", "header" + t),
+  //         footer: (t) => h("footer", "footer" + t)
+  //       }) 
+  //     }
+  //   },
+  // }
+
+
+  // const VueComponent = {
+  //   setup(props, { emit }) {
+  //     return (proxy) => {
+  //       return h("button", { onClick: () => emit("myEvent", 100) }, "点我啊");
+  //     }
+  //   },
+  // }
+
+  // render(h(VueComponent, {onMyEvent: () => alert(100)}), app);
+
+  // const p3 = {
+  //   setup(props, ) {
+  //     const name = inject('name');
+  //     const age = inject('age', 30);
+  //     return () => 
+  //       h('div', [ name.value, age ]);
+  //   }
+  // }
+
+
+  // const p2 = {
+  //   render(props, ) {
+  //     return h(p3);
+  //   }
+  // }
+
+  // const p1 = {
+  //   setup(props) {
+  //     const name = ref("jw");
+  //     setTimeout(() => {
+  //       name.value = 'handsome';
+  //     }, 1000)
+  //     provide("name", name);
+  //     return () => h(p2);
+  //   }
+  // }
+
+  // render(h(p1, { a:1, b:2 }), app)
+
+
+  // render(h(Teleport, { to: '#root' }, [ 123, "abc" ]), app);
+  
+
+  // const My = {
+  //   props: {
+  //     value: String,
+  //   },
+  //   setup(props, { emit, expose, slots, attrs }) {
+  //     console.log(getCurrentInstance(), 'child');
+  //     onBeforeMount(() => {
+  //       console.log(getCurrentInstance(), 'child bus');
+  //       console.log('child onBeforeMount');
+  //     }, getCurrentInstance());
+  //     onMounted(() => {
+  //       console.log('child onMounted');
+  //     });
+  //     onBeforeUpdate(() => {
+  //       console.log("child beforeUpdate");
+  //     });
+  //     onUpdated(() => {
+  //       console.log('child undated'); 
+  //     })
+  //     return () => {
+  //       return h("div", props.value);
+  //     };
+  //   },
+  // }
+
+  // const VueComponent = {
+  //   setup(props, { emit, expose, slots, attrs }) {
+  //     console.log(getCurrentInstance(), 'parent');
+  //     onBeforeMount(() => {
+  //       console.log('parent onBeforeMount');
+  //     });
+  //     onMounted(() => {
+  //       console.log('parent onMounted');
+  //     });
+  //     onBeforeUpdate(() => {
+  //       console.log("update beforeUpdate");
+  //     });
+  //     onUpdated(() => {
+  //       console.log('update undated'); 
+  //     })
+  //     const val = ref("a");
+  //     setTimeout(() => {
+  //       val.value = "b";
+  //     }, 1000);
+  //     return () => {
+  //       return h(My, { value: val.value });
+  //     };
+  //   },
+  // }
+
+  //   const My = {
+  //   props: {
+  //     value: String,
+  //   },
+  //   setup(props, { emit, expose, slots, attrs }) {
+  //     return () => {
+  //       return h("div", props.value);
+  //     };
+  //   },
+  // }
+
+  // const VueComponent = {
+  //   setup(props, { emit, expose, slots, attrs }) {
+  //     const comp = ref(null);
+  //     onMounted(() => {
+  //       console.log(comp.value.a);
+  //     });
+  //     return () => {
+  //       return h(My, { ref: comp, a: 100 });
+  //     };
+  //   },
+  // }
+
+  // render(h(VueComponent), app)
+
+
+  // function functionalComponent(props) {
+  //   return h('div', props.a + props.b);
+  // }
+
+
+  // render(h(functionalComponent, { a: 1, b: 2 }), app)
+
+  // render(h(Teleport, { to: "#root" }, [123, "abc"]), app);
+
+  // setTimeout(() => {
+  //   render(h(Teleport, { to: "#root2" }, [123, "123"]), app)
+  // }, 1000)
+  
+</script>
+</html>

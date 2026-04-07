@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+
+  </div>
+  <style>
+    .x-enter-active,
+    .x-leave-active {
+      transition: opacity 0.8s ease;
+    }
+
+    .x-enter-from,
+    .x-leave-to {
+      opacity: 0;
+    }
+
+  </style>
+</body>
+<script type="module">
+  import { 
+    renderOptions, 
+    createRenderer, 
+    render, 
+    h, 
+    Fragment, 
+    Text, 
+    ref, 
+    provide, 
+    inject,
+    onBeforeMount,
+    onMounted,
+    onBeforeUpdate,
+    onUpdated,
+    getCurrentInstance,
+    Teleport,
+    Transition
+  } from "./runtime-dom.js";
+
+  const props = {
+    name: 'x',
+    onBeforeEnter(el) {
+      console.log(arguments, "beforeEnter");
+    },
+    onEnter(el) {
+      console.log(arguments, "enter");
+    },
+    onLeave(el) {
+      console.log(arguments, "leave");
+    }
+  }
+
+  render(h(Transition, props, {
+    a: 1,
+    default: () => {
+      return h('div', {  
+        style: { width: '100px', height: '100px', background: 'red' },
+    });
+    }
+  }), app);
+
+  setTimeout(() => {
+    render(h(Transition, props, {
+      b: 2,
+      default: () => {
+        return h('p', { 
+          style: { width: '100px', height: '100px', background: 'blue' },
+      });
+      }
+  }), app);
+  }, 2000);
+    setTimeout(() => {
+      render(h(Transition, props, {
+      c: 3,
+      default: () => {
+        return h('div', { 
+          style: { width: '100px', height: '100px', background: 'red' },
+      });
+      }
+  }), app);
+  }, 3000);
+</script>
+</html>

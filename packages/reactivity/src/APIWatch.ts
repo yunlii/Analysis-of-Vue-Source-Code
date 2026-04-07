@@ -40,11 +40,21 @@ function doWatch(source, cb, { deep, immediate }) {
     getter = source;
   }
   let oldValue;
+  let clean;
+  const onCleanup = (fn) => {
+    clean = () => {
+      fn();
+      clean = undefined;
+    }
+  }
 
   const job = () => {
     if(cb) {
       const newValue = effect.run();
-      cb(newValue, oldValue);
+      if(clean) {
+        clean();
+      }
+      cb(newValue, oldValue, onCleanup);
       oldValue = newValue;    
     } else {
       effect.run();
@@ -60,8 +70,13 @@ function doWatch(source, cb, { deep, immediate }) {
     else {
       oldValue = effect.run();
     }
-    // oldValue = effect.run(); 有疑问，为什么要用else，不是必执行的吗？
   } else {
     effect.run();
   }
+
+  const unwatch = () => {
+    effect.stop();
+  }
+
+  return unwatch;
 }

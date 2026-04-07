@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "test": "Hello,this is the first time to run.",
-    "dev": "node scripts/dev.js reactivity -f esm"
+    "dev": "node scripts/dev.js compiler-core -f esm"
   },
   "keywords": [],
   "author": "",

@@ -1,8 +1,8 @@
-import { hasOwn, ShapeFlags } from "@vue/shared";
+import { hasOwn, ShapeFlags } from "packages2/shared/src";
 import { createVNode, isSameVnode } from "./createVNode";
 import { getSequence } from "./seq";
 import { Text, Fragment } from "./createVNode";
-import { isRef, ReactiveEffect } from "@vue/reactivity";
+import { isRef, ReactiveEffect } from "packages2/reactivity/src";
 import queueJob from "./scheduler";
 import { createComponentInstance, setupComponent } from "./component";
 import { invokeArray } from "./apiLifeCycle";

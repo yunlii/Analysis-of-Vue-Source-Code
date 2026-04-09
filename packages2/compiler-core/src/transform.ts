@@ -1,6 +1,6 @@
 import { createCallExpression, createObjectExpression, createVNodeCall, NodeTypes } from "./ast";
 import { CREATE_ELEMENT_BLOCK, CREATE_ELEMENT_VNODE, CREATE_TEXT_VNODE, OPEN_BLOCK, TO_DISPLAY_STRING, Fragment } from "./runtimeHelpers";
-import { PatchFlags } from "@vue/shared";
+import { PatchFlags } from "packages2/shared/src";
 export { transform };
 
 function transformElement(node, context) {

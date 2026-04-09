@@ -1,4 +1,4 @@
-import { isObject } from "@vue/shared"
+import { isObject } from "packages2/shared/src"
 import { mutableHandlers } from "./baseHandler";
 import { ReactiveFlags } from "./constants";
 

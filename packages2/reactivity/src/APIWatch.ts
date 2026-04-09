@@ -1,5 +1,5 @@
-import { isObject, isFunction } from "@vue/shared";
-import { ReactiveEffect, isReactive, isRef } from "@vue/reactivity";
+import { isObject, isFunction } from "packages2/shared/src";
+import { ReactiveEffect, isReactive, isRef } from "packages2/reactivity/src";
 
 export function watch(source, cb, options = {} as any) {  
   return doWatch(source, cb, options);

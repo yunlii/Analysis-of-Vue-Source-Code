@@ -1,4 +1,4 @@
-import { ShapeFlags, isFunction, isObject, isString } from "@vue/shared";
+import { ShapeFlags, isFunction, isObject, isString } from "packages2/shared/src";
 import { isTeleport } from "./components/teleport";
 
 export const Text = Symbol("Text");

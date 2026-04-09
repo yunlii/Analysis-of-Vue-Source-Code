@@ -12,7 +12,8 @@
     "lib": ["ESNext","DOM"],
     "baseUrl": ".",
     "paths": {
-      "@vue/*": ["packages/*/src"] 
-    }
+      "@vue/*": ["packages2/*/src"] 
+    },
+    "ignoreDeprecations": "6.0"
   }
 }

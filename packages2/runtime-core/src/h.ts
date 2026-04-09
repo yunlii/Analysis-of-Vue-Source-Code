@@ -1,4 +1,4 @@
-import { isObject } from "@vue/shared";
+import { isObject } from "packages2/shared/src";
 import { createVNode, isVNode } from "./createVNode";
 
 export function h(type, propsOrChildren?, children?) {

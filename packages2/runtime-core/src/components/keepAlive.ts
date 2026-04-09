@@ -1,6 +1,6 @@
 import { getCurrentInstance } from "../component";
 import { onMounted, onUpdated } from "../apiLifeCycle";
-import { ShapeFlags } from "@vue/shared";
+import { ShapeFlags } from "packages2/shared/src";
 
 export const keepAlive = {
   __isKeepAlive: true,

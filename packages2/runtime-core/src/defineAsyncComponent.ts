@@ -1,6 +1,6 @@
-import { ref } from "@vue/reactivity";
+import { ref } from "packages2/reactivity/src";
 import { h } from "./h";
-import { isFunction, isObject } from "@vue/shared";
+import { isFunction, isObject } from "packages2/shared/src";
 
 export function defineAsyncComponent(options) {
   if(isFunction(options)) {

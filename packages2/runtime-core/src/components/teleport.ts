@@ -1,4 +1,4 @@
-import { ShapeFlags } from "@vue/shared";
+import { ShapeFlags } from "packages2/shared/src";
 
 export const Teleport = {
   __isTeleport: true,

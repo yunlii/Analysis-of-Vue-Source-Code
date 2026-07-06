@@ -1,3 +1,7 @@
+/**
+ * runtime-core 有三部分：1、虚拟树；2、渲染器；3、API功能
+ */
+
 export * from './h';
 export * from './renderer';
 export * from './createVNode';

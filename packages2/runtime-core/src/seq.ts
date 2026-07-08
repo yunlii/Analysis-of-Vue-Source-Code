@@ -13,7 +13,7 @@
           p[i] = result[result.length - 1];
           result.push(i);  
           continue
-      } 
+        } 
       }
       start = 0;
       end = result.length - 1; 

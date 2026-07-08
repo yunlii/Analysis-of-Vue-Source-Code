@@ -257,8 +257,11 @@ export function createRenderer(renderOptions) {
       let i = 0;
       let e1 = c1.length - 1;
       let e2 = c2.length - 1;
+      // 情况1：c1长度>c2长度；情况2：c1长度<c1长度；情况3：c1长度=c2长度。
+      // i会指向对比到不一样时的下一个节点，而e会到上一个节点。
       // 从头部（i=0）开始，逐个对比新旧节点，如果全部都一样那就遍历到最短数组的最后一个。
       // 如果它们是‌相同的VNode，就直接 patch 复用，然后指针 i 后移。一旦遇到不相同的节点，立即跳出循环。
+      // 在e1或者e2全部比对完的情况，i>e1ore2。
       while(i <= e1 && i <= e2) {
         const n1 = c1[i];
         const n2 = c2[i];
@@ -270,6 +273,7 @@ export function createRenderer(renderOptions) {
         i++;
       }
       // 从尾部开始，如果全部都一样那就遍历到最短数组的e与i相同的位置。
+      // 在e1或者e2全部比对完的情况，i<e1ore2。
       while(i <= e1 && i <= e2) {
         const n1 = c1[e1];
         const n2 = c2[e2];
@@ -281,7 +285,9 @@ export function createRenderer(renderOptions) {
         e1--; 
         e2--;
       }
-      // 判断旧
+      // 判断旧节点序列是否被处理完
+      // 如果旧节点序列已全部处理完（i > e1），但新节点序列还有剩余（i <= e2），说明这些是‌需要新增的节点‌。
+      // 如果从头开始处理完C1，anchor是空，也就是默认插入尾部；如果从尾部开始处理完C1，那么就会插入到C2处理到的位置+1之前。
       if(i > e1) {
         if(i <= e2) {
           let nextPos = e2 + 1;
@@ -291,6 +297,7 @@ export function createRenderer(renderOptions) {
             i++;
           }
         }  
+      // 如果新节点序列已全部处理完（i > e2），但旧节点序列还有剩余（i <= e1），说明这些是‌需要卸载的旧节点‌。
       } else if(i > e2) {
         if(i <= e1) {
           while(i <= e1) {
@@ -298,45 +305,126 @@ export function createRenderer(renderOptions) {
             i++;
           }
         }
+      // 旧序列中与新序列的对比，有可能有些是旧节点独有的，新节点没有，反之亦然。
+      // 我们的目的是为了复用旧节点，需要以新节点序列为准，找到旧节点序列中新节点序列也有的。
+      // 为了高效确认节点，需要key来标识节点身份，避免需要遍历c1[i]==c2[i],这种低效的比对。所以需要建立一个keyToNewIndexMap映射。
+      // 有了keyToNewIndexMap，我们就可以快速在旧序列确认复用节点，并卸载不需要复用的节点。
+      // 此时，旧节点序列虽然把多余的节点去掉了。但，可能是完全乱序的，也可能是部分有序。
+      // 我们要以新节点序列为顺序来整顿旧节点的顺序，我们需要一个数组来记录新序列和旧序列的关系，newIndexToOldMapIndex就是干这个的。
+      // 索引作为newIndex，OldMapIndex作为值，并以这个数组值的最长递增子序列为基准插入剩下的节点。
+      // -------------------------------------------------------------
+      // 在没有key的情况下，
+      // 在key相同，但节点实际不同，
+      // 实际相同，但key不同，
       } else {
         let s1 = i;
         let s2 = i;
         const keyToNewIndexMap = new Map();
         let toBePatched = e2 - s2 + 1;
         let newIndexToOldMapIndex = new Array(toBePatched).fill(0);
+        // 构建映射‌：遍历新节点中间部分，用 key 建立 keyToNewIndexMap，方便快速查找。
+        // vnode.key具体哪一个节点，i代表在e2中的位置。
         for(let i = s2; i <= e2; i++) {
           const vnode = c2[i];
           keyToNewIndexMap.set(vnode.key, i);
         }
+        // 复用与删除‌：遍历旧节点中间部分，通过 key 查找在新序列中的位置。找到则 patch 复用，并记录新旧索引映射；找不到则直接 unmount 删除。
+        // i=e1.length + n；e1=e1.length - n；
         for(let i = s1; i <= e1; i++) {
           const vnode = c1[i];
           const newIndex = keyToNewIndexMap.get(vnode.key);
+          // 判断旧节点序列在新序列是否有，如果没有就卸载。
           if(newIndex == undefined) {
             unmount(vnode, parentComponent); 
           } else {
+            // newIndex是在新序列的索引 - S2正好需要处理的第一个节点，因为从0开始的，结果正好是对比序列在新序列的索引号。
+            // 这里i+1是为了规避初始值0，这个0表示的是未匹配。
             newIndexToOldMapIndex[newIndex - s2] = i + 1 ;
             patch(vnode, c2[newIndex], el);
           }
         }
-        // 全量diff，遍历diff。
+        // 计算最长递增子序列
         let increasingSeq = getSequence(newIndexToOldMapIndex);
+        // 移动与新增‌从后往前遍历新节点中间部分。不在最长递增子序列中的节点，通过 hostInsert 移动到正确位置；对于没有 el 的新节点，调用 patch 进行挂载。
         let j = increasingSeq.length - 1;
+        // 从后往前遍历新节点中间部分。
         for(let i = toBePatched - 1; i >= 0; i--) {
           let newIndex = s2 + i;
           let anchor = c2[newIndex + 1]?.el;
           let vnode = c2[newIndex];
+          // 没有 el 的新节点，调用 patch 进行挂载。
           if(!vnode.el) {
             patch(null, vnode, el, anchor);
           } else {
             if(i == increasingSeq[j]) {
               j--;
             } else {
+              // 不在最长递增子序列中的节点，通过 hostInsert 移动到正确位置。
               hostInsert(vnode.el, el, anchor);
             }
           }
         }
       }
     }
+
+  /**
+   * 最长递增子序列（LIS，Longest Increasing Subsequence）算法‌：通过 贪心 + 二分查找‌ 算法，从映射表中找出‌相对顺序保持不变的最长节点序列‌。
+   * 全量diff，遍历diff。
+   * @param arr 
+   * @returns 返回的是‌最长递增子序列在原数组中的索引‌。
+   */
+  function getSequence(arr) {
+    // 存储当前找到的最长递增子序列的在新节点序列的索引。
+    // result 本身‌不一定是最终的子序列‌，它只是记录“长度为 i 的递增子序列的最小末尾元素”在原数组中的位置。
+    // 没有 result 就没法得知和谁比对。
+    const result = [0]; 
+    // p 数组‌：记录每个元素在构建过程中的‌前驱索引‌，用于最后回溯出完整的子序列。
+    // p 的索引就是当前新节点序列索引，P 的索引值就是上一个最大值在新节点序列索引值。回溯的起点是从尾部开始算，第一个值不为0的索引开始。
+    // p 才是真正记录最终‌最长递增子序列的数组。
+    const p = result.slice(0);  
+    const len = arr.length;
+    let start;
+    let end;
+    let middle;
+    for(let i = 0; i < len; i++) { 
+      const arrI = arr[i];
+      // 过滤匹配为空的节点
+      if(arrI !== 0) {
+        // result[result.length - 1]是最大值的索引
+        let resultLastIndex = result[result.length - 1];
+        // 对比之前的最大值和新序列的值，如果大于直接追加到 result 末尾。
+        if(arr[resultLastIndex] < arrI) {
+          p[i] = result[result.length - 1];
+          result.push(i);  
+          continue
+        } 
+      }
+      // ‌二分查找‌：否则，在 result 中找到第一个大于等于 arrI 的元素位置，并用当前索引替换它，同时记录前驱。
+      // 假设情况是2 4 9 10 7 8 11，我们要尽量增加可能性来保证序列足够长，此时到7，7小于9，那么替换掉9，10因为乱序了，在这时候也应该被抛弃，7的上一个节点是4，所以p回溯就不会碰到10。
+      start = 0;
+      end = result.length - 1; 
+      while(start < end) {
+        middle = (start + end) / 2 | 0;
+        if(arr[result[middle]] < arrI) {
+          start = middle + 1;
+        } else {
+          end = middle
+        }
+      }
+      if(arrI < arr[result[start]]) {
+        p[i] = result[start - 1];
+        result[start] = i;
+      }
+    }
+    // 回溯‌：遍历结束后，通过 p 数组从最后一个元素开始回溯，重构出完整的最长递增子序列索引。
+    let l = result.length;
+    let last = result[l - 1];
+    while(l-- > 0) {
+      result[l] = last;
+      last = p[last];
+    }
+    return result
+  }
 
   const mountChildren = (children, container, parentComponent) => {
     normalize(children);
